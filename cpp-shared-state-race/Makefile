@@ -8,7 +8,7 @@ CXXFLAGS = -std=c++23 -Wall
 SRC = main.cpp
 
 # Executable name
-TARGET = main
+TARGET = main.out
 
 # Build rule
 $(TARGET): $(SRC)
