@@ -2,12 +2,15 @@
 #include <cassert>
 #include <functional>
 #include <iostream>
+#include <mutex>
 #include <numeric>
 #include <thread>
 #include <vector>
 
 const int NUMBERS = 10000;
-const int CHUNK_SIZE = 100;
+const size_t CHUNK_SIZE = 100;
+
+std::mutex lock;
 
 int vec_sum(std::vector<int> &v);
 
@@ -20,7 +23,6 @@ int main() {
     v.push_back(i);
   }
   int sum = vec_sum(v);
-  std::cout << "computed!" << std::endl;
   int expected = std::reduce(v.begin(), v.end());
 
   if (sum != expected) {
@@ -51,7 +53,11 @@ int vec_sum(std::vector<int> &v) {
 
 void worker_function(const std::vector<int> &v, size_t start, size_t end,
                      int &total) {
+  int local_total = 0;
   for (size_t i = start; i < end; i++) {
-    total += v[i];
+    local_total += v[i];
   }
+  // simplest solution: lock mutex before mutating shared state
+  std::lock_guard<std::mutex> guard(lock);
+  total += local_total;
 }

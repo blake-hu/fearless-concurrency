@@ -20,7 +20,6 @@ int main() {
     v.push_back(i);
   }
   int sum = vec_sum(v);
-  std::cout << "computed!" << std::endl;
   int expected = std::reduce(v.begin(), v.end());
 
   if (sum != expected) {
