@@ -3,8 +3,14 @@ use std::{
     thread,
 };
 
+const NUMBERS: i32 = 10000;
+const CHUNK_SIZE: usize = 100;
+
 fn main() {
-    let v = vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    let mut v = Vec::new();
+    for i in 0..NUMBERS {
+        v.push(i);
+    }
     let my_sum = vec_sum(&v);
     assert_eq!(v.iter().sum::<i32>(), my_sum);
     println!("vec_sum test passed!")
@@ -13,7 +19,7 @@ fn main() {
 fn vec_sum(v: &Vec<i32>) -> i32 {
     // Arc is an Atomically Reference-Counting pointer
     let total_arc = Arc::new(RwLock::new(0));
-    let chunks: Vec<&[i32]> = v.chunks(2).collect();
+    let chunks: Vec<&[i32]> = v.chunks(CHUNK_SIZE).collect();
 
     // a thread::scope is basically a fork/join block.
     // all threads spawned within the scope are automatically joined by
@@ -22,7 +28,6 @@ fn vec_sum(v: &Vec<i32>) -> i32 {
         for chunk in chunks {
             scope.spawn(|| {
                 // fork
-                println!("spawning thread!");
                 for num in chunk.iter() {
                     let mut total = total_arc
                         .write()

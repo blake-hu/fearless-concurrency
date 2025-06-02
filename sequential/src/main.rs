@@ -1,5 +1,10 @@
+const NUMBERS: i32 = 10000;
+
 fn main() {
-    let v = vec![0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+    let mut v = Vec::new();
+    for i in 0..NUMBERS {
+        v.push(i);
+    }
     let my_sum = vec_sum(&v);
     assert_eq!(v.iter().sum::<i32>(), my_sum);
     println!("vec_sum test passed!")
